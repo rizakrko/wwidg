@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=weather-app
+Type=Service
+ServiceTypes=Plasma/Applet
+Icon=phone
+X-Plasma-API=python
+X-Plasma-MainScript=code/main.py
+X-KDE-PluginInfo-Author=Rizkrko
+X-KDE-PluginInfo-Email=rizakrko@rambler.ru
+X-KDE-PluginInfo-Name=weather-app
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://github.org/rizakrko
+X-KDE-PluginInfo-Category=Online Services
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
