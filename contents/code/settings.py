@@ -13,6 +13,7 @@ from PyKDE4.kdecore import *
 
 from settings_ui import Ui_SettingsDialog
 
+
 class SettingsDialog(QWidget, Ui_SettingsDialog):
     """Settings form for BWCBalance-plasmoid"""
 
@@ -34,8 +35,9 @@ class SettingsDialog(QWidget, Ui_SettingsDialog):
                 self.textPhone.setText(phone)
                 self.textPassword.setText(str(password))
 
-    def get_settings(self):
+    def get_city(self):
         """Returns user-inputed credentials"""
 
         return str(self.City.text())
-
+    def get_weekly(self):
+        return self.fiveDays.isChecked()
