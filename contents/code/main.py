@@ -38,7 +38,6 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         self.step = 0
         self.wasWeekly = 0
         self.wasDaily = 0
-
         self.layout = QGraphicsGridLayout(self.applet)
 
         self.createOneDayLayout()
@@ -209,10 +208,13 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         """btns"""
         self.rightButtn = Plasma.PushButton(self.applet)
         self.leftButton = Plasma.PushButton(self.applet)
+        self.rightButtn.setText("Next")
+        self.leftButton.setText("Prev")
         self.connect(self.rightButtn, SIGNAL("clicked()"), self.nextDay)
         self.connect(self.leftButton, SIGNAL("clicked()"), self.prevDay)
         self.layout.addItem(self.rightButtn, 0, 6)
         self.layout.addItem(self.leftButton, 0, 0)
+
 
     def setFiveDaysData(self):
 
@@ -220,6 +222,8 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         stam = self.data['list'][0]['dt']
         value = datetime.datetime.fromtimestamp(stam).strftime('%a')
         self.dayLabel0.setText(value)
+        self.dayLabel0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        self.dayLabel0.setStyleSheet('')
         self.descLabel0.setText(self.data['list'][0]['weather'][0]['description'].replace (" ", "\n"))
         min = str(round(self.data['list'][0]['main']['temp_min'] - 273.15, 1))
         max = str(round(self.data['list'][0]['main']['temp_max'] - 273.15, 1))
@@ -249,17 +253,26 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         max = str(round(self.data['list'][24]['main']['temp_max'] - 273.15, 1))
         self.tempLabel3.setText("Min: " + min + "\nMax: " + max)
 
-        stam = self.data['list'][32]['dt']
+        stam = self.data['list'][-1]['dt']
         value = datetime.datetime.fromtimestamp(stam).strftime('%a')
         self.dayLabel4.setText(value)
-        self.descLabel4.setText(self.data['list'][32]['weather'][0]['description'].replace (" ", "\n"))
-        min = str(round(self.data['list'][32]['main']['temp_min'] - 273.15, 1))
-        max = str(round(self.data['list'][32]['main']['temp_max'] - 273.15, 1))
+        self.descLabel4.setText(self.data['list'][-1]['weather'][0]['description'].replace (" ", "\n"))
+        min = str(round(self.data['list'][-1]['main']['temp_min'] - 273.15, 1))
+        max = str(round(self.data['list'][-1]['main']['temp_max'] - 273.15, 1))
         self.tempLabel4.setText("Min: " + min + "\nMax: " + max)
 
         # bot
 
         self.setBot()
+
+        self.prevDay()
+        """
+        svg = Plasma.Svg(self.applet)
+        icon_path = "contents/icons/10d.svg"
+        svg.setImagePath(icon_path)
+        self.icon = Plasma.SvgWidget(svg)
+        self.layout.addItem(self.icon, 1, 0)
+        """
         """
         self.humBot0.setText(str(self.data['name']))
         self.humBot1.setText(str(self.data['name']))
@@ -289,8 +302,8 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         """
 
     def setBot(self):
-        if self.step >= 29:
-            self.step = 28
+        if self.step + 4 >= len(self.data['list']):
+            self.step -= 1
         if self.step < 0:
             self.step = 0
         stam = self.data['list'][0 + self.step]['dt']
@@ -327,6 +340,12 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         self.descBot4.setText(self.data['list'][4 + self.step]['weather'][0]['description'].replace (" ", "\n"))
         temp = str(round(self.data['list'][4 + self.step]['main']['temp'] - 273.15, 1))
         self.tempBot4.setText("Temp: " + temp + " C")
+        self.timeBot0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        self.timeBot1.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        self.timeBot2.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        self.timeBot3.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        self.timeBot4.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+
 
     def clearLayout(self):
         while self.layout.count():
@@ -400,10 +419,38 @@ class BWCBalancePlasmoid(plasmascript.Applet):
     def prevDay(self):
         self.step -= 1
         self.setBot()
+        self.dayLabel0.setStyleSheet('')
+        self.dayLabel1.setStyleSheet('')
+        self.dayLabel2.setStyleSheet('')
+        self.dayLabel3.setStyleSheet('')
+        self.dayLabel4.setStyleSheet('')
+        if self.step < 8:
+            self.dayLabel0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        elif self.step < 16:
+            self.dayLabel1.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        elif self.step < 24:
+            self.dayLabel2.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        elif self.step < 32:
+            self.dayLabel3.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+
+
 
     def nextDay(self):
         self.step += 1
         self.setBot()
+        self.dayLabel0.setStyleSheet('')
+        self.dayLabel1.setStyleSheet('')
+        self.dayLabel2.setStyleSheet('')
+        self.dayLabel3.setStyleSheet('')
+        self.dayLabel4.setStyleSheet('')
+        if self.step < 8:
+            self.dayLabel0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        elif self.step < 16:
+            self.dayLabel1.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        elif self.step < 24:
+            self.dayLabel2.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        elif self.step < 32:
+            self.dayLabel3.setStyleSheet('font-style: italic; font-size: 20px; color: red')
 
     def setWeekLayout(self):
         self.applet.setLayout(self.layout)
