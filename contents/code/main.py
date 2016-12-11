@@ -40,6 +40,7 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         self.wasDaily = 0
         self.layout = QGraphicsGridLayout(self.applet)
 
+
         self.createOneDayLayout()
 
         self.setOneDayLayout()
@@ -51,6 +52,7 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         # User credentials
         self.City = ''
         self.weekly = 1
+        self.path = "/home/roma/wwidg/contents/images/"
 
         self.timer = QTimer()
         self.connect(self.timer, SIGNAL("timeout(bool)"), self.update)
@@ -87,6 +89,8 @@ class BWCBalancePlasmoid(plasmascript.Applet):
                 self.setOneDayData()
 
     def createOneDayLayout(self):
+
+        self.layout.setColumnMaximumWidth(0, 300)
         self.wasDaily = 1
         self.clearLayout()
         self.resize(300, 300)
@@ -112,100 +116,57 @@ class BWCBalancePlasmoid(plasmascript.Applet):
 
     def createFiveDaysLayout(self):
 
+        self.layout.setColumnMaximumWidth(0, 90)
+
         self.clearLayout()
         self.wasWeekly = 1
 
-        self.resize(700, 300)
+        self.resize(540, 300)
 
         """top"""
+        self.dayLabels = []
+        self.descLabels = []
+        self.tempLabels = []
+        self.timeBotLabels = []
+        self.descBotLabels = []
+        self.tempBotLabels = []
+        self.humBotLabels = []
+        for i in range(4):
+            self.dayLabels.append(Plasma.Label(self.applet))
+            self.descLabels.append(Plasma.Label(self.applet))
+            self.tempLabels.append(Plasma.Label(self.applet))
+            self.timeBotLabels.append(Plasma.Label(self.applet))
+            self.descBotLabels.append(Plasma.Label(self.applet))
+            self.tempBotLabels.append(Plasma.Label(self.applet))
+            self.humBotLabels.append(Plasma.Label(self.applet))
 
-        self.dayLabel0 = Plasma.Label(self.applet)
-        self.dayLabel1 = Plasma.Label(self.applet)
-        self.dayLabel2 = Plasma.Label(self.applet)
-        self.dayLabel3 = Plasma.Label(self.applet)
-        self.dayLabel4 = Plasma.Label(self.applet)
 
-        self.layout.addItem(self.dayLabel0, 0, 1)
-        self.layout.addItem(self.dayLabel1, 0, 2)
-        self.layout.addItem(self.dayLabel2, 0, 3)
-        self.layout.addItem(self.dayLabel3, 0, 4)
-        self.layout.addItem(self.dayLabel4, 0, 5)
+        for i in range(4):
+            self.layout.addItem(self.dayLabels[i], 0, i + 1)
+            self.layout.addItem(self.descLabels[i], 1, i + 1)
+            self.layout.addItem(self.tempLabels[i], 2, i + 1)
+            self.layout.addItem(self.timeBotLabels[i], 3, i + 1)
+            self.layout.addItem(self.descBotLabels[i], 4, i + 1)
+            self.layout.addItem(self.tempBotLabels[i], 5, i + 1)
+            self.layout.addItem(self.humBotLabels[i], 6, i + 1)
 
-        self.descLabel0 = Plasma.Label(self.applet)
-        self.descLabel1 = Plasma.Label(self.applet)
-        self.descLabel2 = Plasma.Label(self.applet)
-        self.descLabel3 = Plasma.Label(self.applet)
-        self.descLabel4 = Plasma.Label(self.applet)
+        self.tempLabelBot = Plasma.Label(self.applet)
+        self.humLabelBot = Plasma.Label(self.applet)
+        self.layout.addItem(self.tempLabelBot, 5, 0)
+        self.layout.addItem(self.humLabelBot, 6, 0)
+        self.tempLabelBot.setText("Temperature, C:")
+        self.humLabelBot.setText("Humidity, %:")
 
-        self.layout.addItem(self.descLabel0, 1, 1)
-        self.layout.addItem(self.descLabel1, 1, 2)
-        self.layout.addItem(self.descLabel2, 1, 3)
-        self.layout.addItem(self.descLabel3, 1, 4)
-        self.layout.addItem(self.descLabel4, 1, 5)
+        self.NameLabel = Plasma.Label(self.applet)
+        self.DescLabel = Plasma.Label(self.applet)
+        self.TempLabel = Plasma.Label(self.applet)
+        self.layout.addItem(self.NameLabel, 0,0)
+        self.layout.addItem(self.DescLabel, 2,0)
+        self.layout.addItem(self.TempLabel, 1,0)
 
-        self.tempLabel0 = Plasma.Label(self.applet)
-        self.tempLabel1 = Plasma.Label(self.applet)
-        self.tempLabel2 = Plasma.Label(self.applet)
-        self.tempLabel3 = Plasma.Label(self.applet)
-        self.tempLabel4 = Plasma.Label(self.applet)
 
-        self.layout.addItem(self.tempLabel0, 2, 1)
-        self.layout.addItem(self.tempLabel1, 2, 2)
-        self.layout.addItem(self.tempLabel2, 2, 3)
-        self.layout.addItem(self.tempLabel3, 2, 4)
-        self.layout.addItem(self.tempLabel4, 2, 5)
 
-        """bot"""
-
-        self.timeBot0 = Plasma.Label(self.applet)
-        self.timeBot1 = Plasma.Label(self.applet)
-        self.timeBot2 = Plasma.Label(self.applet)
-        self.timeBot3 = Plasma.Label(self.applet)
-        self.timeBot4 = Plasma.Label(self.applet)
-
-        self.layout.addItem(self.timeBot0, 3, 1)
-        self.layout.addItem(self.timeBot1, 3, 2)
-        self.layout.addItem(self.timeBot2, 3, 3)
-        self.layout.addItem(self.timeBot3, 3, 4)
-        self.layout.addItem(self.timeBot4, 3, 5)
-
-        self.descBot0 = Plasma.Label(self.applet)
-        self.descBot1 = Plasma.Label(self.applet)
-        self.descBot2 = Plasma.Label(self.applet)
-        self.descBot3 = Plasma.Label(self.applet)
-        self.descBot4 = Plasma.Label(self.applet)
-
-        self.layout.addItem(self.descBot0, 4, 1)
-        self.layout.addItem(self.descBot1, 4, 2)
-        self.layout.addItem(self.descBot2, 4, 3)
-        self.layout.addItem(self.descBot3, 4, 4)
-        self.layout.addItem(self.descBot4, 4, 5)
-
-        self.tempBot0 = Plasma.Label(self.applet)
-        self.tempBot1 = Plasma.Label(self.applet)
-        self.tempBot2 = Plasma.Label(self.applet)
-        self.tempBot3 = Plasma.Label(self.applet)
-        self.tempBot4 = Plasma.Label(self.applet)
-
-        self.layout.addItem(self.tempBot0, 5, 1)
-        self.layout.addItem(self.tempBot1, 5, 2)
-        self.layout.addItem(self.tempBot2, 5, 3)
-        self.layout.addItem(self.tempBot3, 5, 4)
-        self.layout.addItem(self.tempBot4, 5, 5)
-
-        self.humBot0 = Plasma.Label(self.applet)
-        self.humBot1 = Plasma.Label(self.applet)
-        self.humBot2 = Plasma.Label(self.applet)
-        self.humBot3 = Plasma.Label(self.applet)
-        self.humBot4 = Plasma.Label(self.applet)
-
-        self.layout.addItem(self.humBot0, 6, 1)
-        self.layout.addItem(self.humBot1, 6, 2)
-        self.layout.addItem(self.humBot2, 6, 3)
-        self.layout.addItem(self.humBot3, 6, 4)
-        self.layout.addItem(self.humBot4, 6, 5)
-
-        """btns"""
+        #btns
         self.rightButtn = Plasma.PushButton(self.applet)
         self.leftButton = Plasma.PushButton(self.applet)
         self.rightButtn.setText("Next")
@@ -213,138 +174,50 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         self.connect(self.rightButtn, SIGNAL("clicked()"), self.nextDay)
         self.connect(self.leftButton, SIGNAL("clicked()"), self.prevDay)
         self.layout.addItem(self.rightButtn, 0, 6)
-        self.layout.addItem(self.leftButton, 0, 0)
+        self.layout.addItem(self.leftButton, 6, 6)
 
 
     def setFiveDaysData(self):
 
-        # top
-        stam = self.data['list'][0]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%a')
-        self.dayLabel0.setText(value)
-        self.dayLabel0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        self.dayLabel0.setStyleSheet('')
-        self.descLabel0.setText(self.data['list'][0]['weather'][0]['description'].replace (" ", "\n"))
-        min = str(round(self.data['list'][0]['main']['temp_min'] - 273.15, 1))
-        max = str(round(self.data['list'][0]['main']['temp_max'] - 273.15, 1))
-        self.tempLabel0.setText("Min: " + min + "\nMax: " + max)
-
-        stam = self.data['list'][8]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%a')
-        self.dayLabel1.setText(value)
-        self.descLabel1.setText(self.data['list'][8]['weather'][0]['description'].replace (" ", "\n"))
-        min = str(round(self.data['list'][8]['main']['temp_min'] - 273.15, 1))
-        max = str(round(self.data['list'][8]['main']['temp_max'] - 273.15, 1))
-        self.tempLabel1.setText("Min: " + min + "\nMax: " + max)
-
-        stam = self.data['list'][16]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%a')
-        self.dayLabel2.setText(value)
-        self.descLabel2.setText(self.data['list'][16]['weather'][0]['description'].replace (" ", "\n"))
-        min = str(round(self.data['list'][16]['main']['temp_min'] - 273.15, 1))
-        max = str(round(self.data['list'][16]['main']['temp_max'] - 273.15, 1))
-        self.tempLabel2.setText("Min: " + min + "\nMax: " + max)
-
-        stam = self.data['list'][24]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%a')
-        self.dayLabel3.setText(value)
-        self.descLabel3.setText(self.data['list'][24]['weather'][0]['description'].replace (" ", "\n"))
-        min = str(round(self.data['list'][24]['main']['temp_min'] - 273.15, 1))
-        max = str(round(self.data['list'][24]['main']['temp_max'] - 273.15, 1))
-        self.tempLabel3.setText("Min: " + min + "\nMax: " + max)
-
-        stam = self.data['list'][-1]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%a')
-        self.dayLabel4.setText(value)
-        self.descLabel4.setText(self.data['list'][-1]['weather'][0]['description'].replace (" ", "\n"))
-        min = str(round(self.data['list'][-1]['main']['temp_min'] - 273.15, 1))
-        max = str(round(self.data['list'][-1]['main']['temp_max'] - 273.15, 1))
-        self.tempLabel4.setText("Min: " + min + "\nMax: " + max)
+        for i in range(4):
+            stam = self.data['list'][0 + 8*i]['dt']
+            value = datetime.datetime.fromtimestamp(stam).strftime('%a')
+            value2 = datetime.datetime.fromtimestamp(stam).strftime('%d %b')
+            self.dayLabels[i].setText(value + '\n' + value2)
+            self.descLabels[i].setImage(self.path + self.data['list'][0 + 8*i]['weather'][0]['icon'] + ".png")
+            min = str(round(self.data['list'][0 + 8*i]['main']['temp_min'] - 273.15, 1))
+            max = str(round(self.data['list'][0 + 8*i]['main']['temp_max'] - 273.15, 1))
+            self.tempLabels[i].setText("Min. " + "Max.\n"+ min + "  " + max)
 
         # bot
 
         self.setBot()
 
-        self.prevDay()
-        """
-        svg = Plasma.Svg(self.applet)
-        icon_path = "contents/icons/10d.svg"
-        svg.setImagePath(icon_path)
-        self.icon = Plasma.SvgWidget(svg)
-        self.layout.addItem(self.icon, 1, 0)
-        """
-        """
-        self.humBot0.setText(str(self.data['name']))
-        self.humBot1.setText(str(self.data['name']))
-        self.humBot2.setText(str(self.data['name']))
-        self.humBot3.setText(str(self.data['name']))
-        self.humBot4.setText(str(self.data['name']))
+        #left
+        #self.NameLabel.setText(self.data['city']['name'])
+        stam = self.data['list'][0]['dt']
+        value = datetime.datetime.fromtimestamp(stam).strftime('%d')
+        self.NameLabel.setText("Weather today,\n  " + value + ':00')
+        self.DescLabel.setImage(self.path + self.data['list'][0]['weather'][0]['icon'] + ".png")
+        self.TempLabel.setText(str(round(self.data['list'][0]['main']['temp'] - 273.15, 1)) + 'C')
 
-        self.descLabel0.setText("AA")
-        self.descLabel1.setText("AB")
-        self.descLabel2.setText("AC")
-        self.descLabel3.setText("AD")
-        self.descLabel4.setText("AE")
-        """
-        """
-        for i in range(5):
-            self.nameLabels[i].setText(str(self.data['name']))
-            self.nameLabels[i].setStyleSheet('font: 10pt "Monaco"')
-        for i in range(5):
-            self.descLabels[i].setText(str(self.data['weather'][0]['description']))
-            self.descLabels[i].setStyleSheet('font: 10pt "Monaco"')
-        for i in range(5):
-            self.tempLabels[i].setText(str(round(self.data['main']['temp'] - 273.15, 1)) + ' C')
-            self.tempLabels[i].setStyleSheet('font: 10pt "Monaco"')
-        for i in range(5):
-            self.humLabels[i].setText(str(self.data['main']['humidity']) + '%')
-            self.humLabels[i].setStyleSheet('font: 10pt "Monaco"')
-        """
+        self.prevDay()
+
 
     def setBot(self):
-        if self.step + 4 >= len(self.data['list']):
+        if self.step > 3:
             self.step -= 1
         if self.step < 0:
             self.step = 0
-        stam = self.data['list'][0 + self.step]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%H')
-        self.timeBot0.setText(value)
-        self.descBot0.setText(self.data['list'][0 + self.step]['weather'][0]['description'].replace (" ", "\n"))
-        temp = str(round(self.data['list'][0 + self.step]['main']['temp'] - 273.15, 1))
-        self.tempBot0.setText("Temp: " + temp + " C")
 
-        stam = self.data['list'][1 + self.step]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%H')
-        self.timeBot1.setText(value)
-        self.descBot1.setText(self.data['list'][1 + self.step]['weather'][0]['description'].replace (" ", "\n"))
-        temp = str(round(self.data['list'][1 + self.step]['main']['temp'] - 273.15, 1))
-        self.tempBot1.setText("Temp: " + temp + " C")
-
-        stam = self.data['list'][2 + self.step]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%H')
-        self.timeBot2.setText(value)
-        self.descBot2.setText(self.data['list'][2 + self.step]['weather'][0]['description'].replace (" ", "\n"))
-        temp = str(round(self.data['list'][2 + self.step]['main']['temp'] - 273.15, 1))
-        self.tempBot2.setText("Temp: " + temp + " C")
-
-        stam = self.data['list'][3 + self.step]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%H')
-        self.timeBot3.setText(value)
-        self.descBot3.setText(self.data['list'][3 + self.step]['weather'][0]['description'].replace (" ", "\n"))
-        temp = str(round(self.data['list'][3 + self.step]['main']['temp'] - 273.15, 1))
-        self.tempBot3.setText("Temp: " + temp + " C")
-
-        stam = self.data['list'][4 + self.step]['dt']
-        value = datetime.datetime.fromtimestamp(stam).strftime('%H')
-        self.timeBot4.setText(value)
-        self.descBot4.setText(self.data['list'][4 + self.step]['weather'][0]['description'].replace (" ", "\n"))
-        temp = str(round(self.data['list'][4 + self.step]['main']['temp'] - 273.15, 1))
-        self.tempBot4.setText("Temp: " + temp + " C")
-        self.timeBot0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        self.timeBot1.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        self.timeBot2.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        self.timeBot3.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        self.timeBot4.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+        for i in range(4):
+            stam = self.data['list'][i*2 + 8*self.step]['dt']
+            value = datetime.datetime.fromtimestamp(stam).strftime('%H' + ':00')
+            self.timeBotLabels[i].setText(value)
+            self.descBotLabels[i].setImage(self.path + self.data['list'][i*2 + 8*self.step]['weather'][0]['icon'] + ".png")
+            temp = str(round(self.data['list'][i*2 + 8*self.step]['main']['temp'] - 273.15, 1))
+            self.tempBotLabels[i].setText(temp)
+            self.humBotLabels[i].setText(str(self.data['list'][i*2 + 8*self.step]['main']['humidity']) + "%")
 
 
     def clearLayout(self):
@@ -361,48 +234,21 @@ class BWCBalancePlasmoid(plasmascript.Applet):
                 self.clearLayoutt(child.layout())
 
     def clear2(self):
-        self.dayLabel0.setText("")
-        self.dayLabel1.setText("")
-        self.dayLabel2.setText("")
-        self.dayLabel3.setText("")
-        self.dayLabel4.setText("")
 
-        self.descLabel0.setText("")
-        self.descLabel1.setText("")
-        self.descLabel2.setText("")
-        self.descLabel3.setText("")
-        self.descLabel4.setText("")
-
-        self.tempLabel0.setText("")
-        self.tempLabel1.setText("")
-        self.tempLabel2.setText("")
-        self.tempLabel3.setText("")
-        self.tempLabel4.setText("")
-
-        self.timeBot0.setText("")
-        self.timeBot1.setText("")
-        self.timeBot2.setText("")
-        self.timeBot3.setText("")
-        self.timeBot4.setText("")
-
-        self.descBot0.setText("")
-        self.descBot1.setText("")
-        self.descBot2.setText("")
-        self.descBot3.setText("")
-        self.descBot4.setText("")
-
-        self.tempBot0.setText("")
-        self.tempBot1.setText("")
-        self.tempBot2.setText("")
-        self.tempBot3.setText("")
-        self.tempBot4.setText("")
-
-
-        self.humBot0.setText("")
-        self.humBot1.setText("")
-        self.humBot2.setText("")
-        self.humBot3.setText("")
-        self.humBot4.setText("")
+        for i in range(4):
+            self.dayLabels[i].setText("")
+            self.descLabels[i].setText("")
+            self.descLabels[i] = 0
+            self.tempLabels[i].setText("")
+            self.timeBotLabels[i].setText("")
+            self.tempBotLabels[i].setText("")
+            self.descBotLabels[i] = 0
+            self.humBotLabels[i].setText("")
+            self.humLabelBot = 0
+            self.tempLabelBot = 0
+            self.NameLabel = 0
+            self.DescLabel = 0
+            self.TempLabel = 0
 
         self.rightButtn = None
         self.leftButton = None
@@ -417,40 +263,17 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         self.update()
 
     def prevDay(self):
+
         self.step -= 1
         self.setBot()
-        self.dayLabel0.setStyleSheet('')
-        self.dayLabel1.setStyleSheet('')
-        self.dayLabel2.setStyleSheet('')
-        self.dayLabel3.setStyleSheet('')
-        self.dayLabel4.setStyleSheet('')
-        if self.step < 8:
-            self.dayLabel0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        elif self.step < 16:
-            self.dayLabel1.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        elif self.step < 24:
-            self.dayLabel2.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        elif self.step < 32:
-            self.dayLabel3.setStyleSheet('font-style: italic; font-size: 20px; color: red')
+
+
 
 
 
     def nextDay(self):
         self.step += 1
         self.setBot()
-        self.dayLabel0.setStyleSheet('')
-        self.dayLabel1.setStyleSheet('')
-        self.dayLabel2.setStyleSheet('')
-        self.dayLabel3.setStyleSheet('')
-        self.dayLabel4.setStyleSheet('')
-        if self.step < 8:
-            self.dayLabel0.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        elif self.step < 16:
-            self.dayLabel1.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        elif self.step < 24:
-            self.dayLabel2.setStyleSheet('font-style: italic; font-size: 20px; color: red')
-        elif self.step < 32:
-            self.dayLabel3.setStyleSheet('font-style: italic; font-size: 20px; color: red')
 
     def setWeekLayout(self):
         self.applet.setLayout(self.layout)
