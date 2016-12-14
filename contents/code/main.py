@@ -52,7 +52,7 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         # User credentials
         self.City = ''
         self.weekly = 1
-        self.path = "/home/roma/wwidg/contents/images/"
+        self.path = "/home/draed/wwidg/contents/images/"
 
         self.timer = QTimer()
         self.connect(self.timer, SIGNAL("timeout(bool)"), self.update)
@@ -210,6 +210,10 @@ class BWCBalancePlasmoid(plasmascript.Applet):
         if self.step < 0:
             self.step = 0
 
+	for i in range(4):
+		self.dayLabels[i].setStyleSheet("")
+	self.dayLabels[self.step].setStyleSheet("color: red")
+
         for i in range(4):
             stam = self.data['list'][i*2 + 8*self.step]['dt']
             value = datetime.datetime.fromtimestamp(stam).strftime('%H' + ':00')
@@ -265,6 +269,7 @@ class BWCBalancePlasmoid(plasmascript.Applet):
     def prevDay(self):
 
         self.step -= 1
+	
         self.setBot()
 
 
@@ -273,6 +278,8 @@ class BWCBalancePlasmoid(plasmascript.Applet):
 
     def nextDay(self):
         self.step += 1
+	
+
         self.setBot()
 
     def setWeekLayout(self):
